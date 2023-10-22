@@ -33,6 +33,47 @@ export class DashboardEffects {
   });
 
   /**
+   * An effect that adds a new product to the store.
+   * @returns An observable of the action to dispatch.
+   */
+  addProduct$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(AppActions.addProduct),
+      switchMap((action) =>
+        this._productService.addProduct(action.newProduct).pipe(
+          map(() =>
+            AppActions.addProductSuccess({ newProduct: action.newProduct })
+          ),
+          catchError((error) => of(AppActions.addProductFailure({ error })))
+        )
+      )
+    );
+  });
+
+  /**
+   * Effect that triggers when a product is successfully added.
+   * Shows a success alert and dispatches an action to load the products.
+   * @returns An observable of the action to show the success alert.
+   */
+  addProductSuccess$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(AppActions.addProductSuccess),
+      switchMap(() =>
+        of(
+          ShowAlert({
+            severity: 'success',
+            summary: 'Hecho',
+            detail: 'Producto Añadido',
+            life: 3000,
+          })
+          // ,
+          // AppActions.loadProducts()
+        )
+      )
+    );
+  });
+
+  /**
    * Effect that removes a product from the database.
    * @returns An observable of the removeProductSuccess action or the removeProductFailure action if an error occurs.
    */
@@ -80,7 +121,11 @@ export class DashboardEffects {
       ofType(AppActions.updateProduct),
       switchMap((action) =>
         this._productService.updateProduct(action.updatedProduct).pipe(
-          map(() => AppActions.updateProductSuccess()),
+          map(() =>
+            AppActions.updateProductSuccess({
+              updatedProduct: action.updatedProduct,
+            })
+          ),
           catchError((error) => of(AppActions.removeProductFailure({ error })))
         )
       )
@@ -94,7 +139,7 @@ export class DashboardEffects {
   updateProductSuccess$ = createEffect(() => {
     return this.action$.pipe(
       ofType(AppActions.updateProductSuccess),
-      switchMap(() =>
+      switchMap((action) =>
         of(
           ShowAlert({
             severity: 'success',

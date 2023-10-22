@@ -385,13 +385,28 @@ export class ProductService {
   }
 
   /** Updates a product in the list of products.
-   * @param product - The product to update.
-   * @returns An observable with a status and message indicating the success of the update.
+   * @param product - The product to be updated.
+   * @returns An Observable with a status and message indicating the success of the operation.
    */
   updateProduct(product: Product) {
-    const index = this.products.findIndex((p) => p.id === product.id);
-    this.products[index] = product;
+    const updatedProducts = this.products.map((p) => {
+      if (p.id === product.id) {
+        return { ...p, ...product };
+      } else {
+        return p;
+      }
+    });
+    this.products = updatedProducts;
     return of({ status: 'ok', message: 'Product updated successfully' });
+  }
+
+  /** Adds a new product to the list of products.
+   * @param product - The product to be added.
+   * @returns An observable with a status and message indicating the success of the operation.
+   */
+  addProduct(product: Product) {
+    this.products = [...this.products, product];
+    return of({ status: 'ok', message: 'Product added successfully' });
   }
 
   /** Returns an observable of an array of products.

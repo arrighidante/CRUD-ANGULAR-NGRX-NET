@@ -13,6 +13,24 @@ export const loadProductsFailure = createAction(
   props<{ error: string }>()
 );
 
+export const addProduct = createAction(
+  '[Dashboard] Add Product',
+  props<{
+    newProduct: Product;
+  }>()
+);
+
+export const addProductSuccess = createAction(
+  '[Dashboard] Add Product Success',
+  props<{
+    newProduct: Product;
+  }>()
+);
+
+export const addProductFailure = createAction(
+  '[Dashboard] Add Product Failure',
+  props<{ error: string }>()
+);
 export const removeProduct = createAction(
   '[Dashboard] Remove Product',
   props<{
@@ -37,7 +55,8 @@ export const updateProduct = createAction(
 );
 
 export const updateProductSuccess = createAction(
-  '[Dashboard] Update Product Success'
+  '[Dashboard] Update Product Success',
+  props<{ updatedProduct: Product }>()
 );
 
 export const updateProductFailure = createAction(

@@ -15,10 +15,9 @@ export const getDashboardState =
 
 //#region - - - - - - - - - SELECTORS
 
-export const getProducts = createSelector(
-  getDashboardState,
-  (state) => state.products
-);
+export const getProducts = createSelector(getDashboardState, (state) => [
+  ...state.products,
+]);
 
 export const getStatus = createSelector(
   getDashboardState,
@@ -34,25 +33,25 @@ export const getCurrentProduct = createSelector(
   getDashboardState,
   getCurrentProductId,
   (state, currentProductId) => {
+    let cProduct: Product;
     if (currentProductId === '0') {
-      return {
+      cProduct = {
         id: '',
         code: '',
         name: '',
         description: '',
         image: '',
-        price: '',
+        price: 0,
         category: '',
-        quantity: '',
+        quantity: 0,
         inventoryStatus: '',
-        rating: '',
+        rating: 0,
       };
+      return cProduct;
     } else {
-      return currentProductId
-        ? (state.products?.find(
-            (p: any) => p.id === currentProductId
-          ) as Product)
-        : null;
+      return state.products?.find(
+        (p: Product) => p.id === currentProductId
+      ) as Product;
     }
   }
 );
@@ -93,6 +92,31 @@ export const dashboardReducer = createReducer<DashboardState>(
     })
   ),
 
+  on(
+    AppActions.addProduct,
+    (state): DashboardState => ({
+      ...state,
+      status: 'loading',
+    })
+  ),
+
+  on(
+    AppActions.addProductSuccess,
+    (state, action): DashboardState => ({
+      ...state,
+      status: 'success',
+      products: [...state.products, action.newProduct],
+    })
+  ),
+
+  on(
+    AppActions.addProductFailure,
+    (state, action): DashboardState => ({
+      ...state,
+      error: action.error,
+      status: 'error',
+    })
+  ),
   on(
     AppActions.removeProduct,
     (state): DashboardState => ({
