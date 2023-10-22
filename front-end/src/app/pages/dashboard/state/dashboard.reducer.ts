@@ -103,7 +103,7 @@ export const dashboardReducer = createReducer<DashboardState>(
 
   on(
     AppActions.removeProductSuccess,
-    (state, action): DashboardState => ({
+    (state): DashboardState => ({
       ...state,
       status: 'success',
     })
@@ -128,7 +128,7 @@ export const dashboardReducer = createReducer<DashboardState>(
 
   on(
     AppActions.updateProductSuccess,
-    (state, action): DashboardState => ({
+    (state): DashboardState => ({
       ...state,
       status: 'success',
     })
@@ -147,6 +147,14 @@ export const dashboardReducer = createReducer<DashboardState>(
     (state, action): DashboardState => ({
       ...state,
       currentProduct: action.currentProduct,
+    })
+  ),
+
+  on(
+    AppActions.clearCurrentProduct,
+    (state): DashboardState => ({
+      ...state,
+      currentProduct: null,
     })
   )
 );

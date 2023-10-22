@@ -49,3 +49,7 @@ export const setCurrentProduct = createAction(
   '[Dashboard] Set Current Product',
   props<{ currentProduct: Product }>()
 );
+
+export const clearCurrentProduct = createAction(
+  '[Dashboard] Clear Current Product'
+);

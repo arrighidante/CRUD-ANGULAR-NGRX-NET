@@ -105,6 +105,7 @@ export class DashboardComponent implements OnInit {
   hideDialog() {
     this.productDialog = false;
     this.submitted = false;
+    this.store.dispatch(AppActions.clearCurrentProduct());
   }
 
   saveProduct() {
