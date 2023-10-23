@@ -1,10 +1,21 @@
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { Product } from '../interfaces/product.interface';
+import { BaseService } from './base.service';
 
 @Injectable()
-export class ProductService {
+export class ProductService extends BaseService {
   products: Product[] = [];
+
+  getProductsAPI(): any {
+    const url = `${this.api?.apiProducts?.url}`;
+    return this.http.get<Product[]>(url);
+  }
+
+  getProductByIdAPI(productId: any): Observable<Product> {
+    const url = `${this.api?.apiProducts?.url}/${productId.toString()}`;
+    return this.http.get<any>(url);
+  }
 
   /** Returns an array of Product objects.
    * @returns {Product[]} Array of Product objects.

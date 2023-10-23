@@ -99,10 +99,14 @@ import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { DashboardEffects } from './pages/dashboard/state/dashboard.effect';
 import { dashboardReducer } from './pages/dashboard/state/dashboard.reducer';
 import { MessageEffects } from './components/state/message.effects';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import { BaseService } from './services/base.service';
+import { TokenInterceptor } from './services/token-interceptor';
 
 @NgModule({
   declarations: [AppComponent, DashboardComponent],
   imports: [
+    HttpClientModule,
     AvatarModule,
     AvatarGroupModule,
     AccordionModule,
@@ -195,7 +199,17 @@ import { MessageEffects } from './components/state/message.effects';
     StoreModule.forFeature('dashboard-state', dashboardReducer),
     EffectsModule.forFeature([DashboardEffects, MessageEffects]),
   ],
-  providers: [ProductService, MessageService, ConfirmationService],
+  providers: [
+    ProductService,
+    MessageService,
+    ConfirmationService,
+    BaseService,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: TokenInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

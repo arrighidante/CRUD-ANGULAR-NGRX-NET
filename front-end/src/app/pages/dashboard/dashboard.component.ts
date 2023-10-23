@@ -38,10 +38,11 @@ export class DashboardComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private store: Store<DashboardState>
+    private store: Store<DashboardState>,
+    private productService: ProductService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.store.dispatch(AppActions.loadProducts());
 
     this.productos$ = this.store
@@ -53,6 +54,10 @@ export class DashboardComponent implements OnInit {
       { label: 'STOCK BAJO', value: 'STOCK BAJO' },
       { label: 'SIN STOCK', value: 'SIN STOCK' },
     ];
+
+    this.productService.getProductsAPI().subscribe((data: any) => {
+      console.log('Dashboard data', data);
+    });
   }
 
   openNew() {

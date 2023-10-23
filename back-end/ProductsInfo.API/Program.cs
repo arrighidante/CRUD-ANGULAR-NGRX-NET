@@ -10,6 +10,7 @@ using Serilog;
 using Serilog.Events;
 using System.Reflection;
 using System.Text;
+using Microsoft.Extensions.Options;
 
 
 //Log.Logger = new LoggerConfiguration()
@@ -39,6 +40,28 @@ Log.Logger = new LoggerConfiguration()
     .CreateLogger();
 
 var builder = WebApplication.CreateBuilder(args);
+
+// CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("UnsafeAllowAll", builder =>
+                     builder.AllowAnyOrigin()
+                     .AllowAnyMethod()
+                     .AllowAnyHeader());
+
+    options.AddPolicy("AllowSpecificOrigins",
+            builder =>
+            {
+                builder.WithOrigins("http://localhost",
+                                    "http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+            });
+});
+
+
+
+
 builder.WebHost.UseSentry();
 
 // Not useful anymore since we're using Serilog
@@ -140,6 +163,7 @@ builder.Services.AddAuthorization(options =>
 });
 
 
+
 // API VERSIONING
 builder.Services.AddApiVersioning(setupAction =>
 {
@@ -150,7 +174,6 @@ builder.Services.AddApiVersioning(setupAction =>
 
 var app = builder.Build();
 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -159,6 +182,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+
+app.UseCors("AllowSpecificOrigins");
 
 app.UseRouting();
 
