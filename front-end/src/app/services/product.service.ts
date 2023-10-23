@@ -7,7 +7,7 @@ import { BaseService } from './base.service';
 export class ProductService extends BaseService {
   products: Product[] = [];
 
-  getProductsAPI(): any {
+  getProductsAPI(): Observable<Product[]> {
     const url = `${this.api?.apiProducts?.url}`;
     return this.http.get<Product[]>(url);
   }
@@ -15,6 +15,11 @@ export class ProductService extends BaseService {
   getProductByIdAPI(productId: any): Observable<Product> {
     const url = `${this.api?.apiProducts?.url}/${productId.toString()}`;
     return this.http.get<any>(url);
+  }
+
+  deleteProductAPI(productId: string) {
+    const url = `${this.api?.apiProducts?.url}/${productId.toString()}`;
+    return this.http.delete<any>(url);
   }
 
   /** Returns an array of Product objects.

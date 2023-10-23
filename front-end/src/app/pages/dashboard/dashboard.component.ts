@@ -44,7 +44,7 @@ export class DashboardComponent implements OnInit {
 
   async ngOnInit() {
     this.store.dispatch(AppActions.loadProducts());
-
+    // this.productService.getToken();
     this.productos$ = this.store
       .select(getProducts)
       .pipe(tap((products) => (this.products = products)));
@@ -55,7 +55,9 @@ export class DashboardComponent implements OnInit {
       { label: 'SIN STOCK', value: 'SIN STOCK' },
     ];
 
-    this.productService.getProductsAPI().subscribe((data: any) => {
+    this.productService.doAuthenticate();
+
+    this.productService.getProductsAPI().subscribe((data: Product[]) => {
       console.log('Dashboard data', data);
     });
   }

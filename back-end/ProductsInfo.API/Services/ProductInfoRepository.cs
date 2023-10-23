@@ -76,15 +76,15 @@ namespace Products.API.Services
             return await _context.Products.AnyAsync(c => c.Id == cityId);
         }
 
-   
 
-      
-      
 
-        //public void DeletePointOfInterest(PointOfInterest pointOfInterest)
-        //{
-        //    _context.PointOfInterests.Remove(pointOfInterest);
-        //}
+
+
+
+        public void DeleteProduct(Product product)
+        {
+            _context.Products.Remove(product);
+        }
 
         public async Task<bool> SaveChangesAsync()
         {

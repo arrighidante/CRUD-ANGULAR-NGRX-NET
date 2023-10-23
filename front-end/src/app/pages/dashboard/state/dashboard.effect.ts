@@ -22,7 +22,7 @@ export class DashboardEffects {
     return this.action$.pipe(
       ofType(AppActions.loadProducts),
       switchMap(() =>
-        this._productService.getProducts().pipe(
+        this._productService.getProductsAPI().pipe(
           map((dbProducts: Product[]) =>
             AppActions.loadProductsSuccess({ products: dbProducts })
           ),
@@ -81,7 +81,7 @@ export class DashboardEffects {
     return this.action$.pipe(
       ofType(AppActions.removeProduct),
       switchMap((action) =>
-        this._productService.deleteProduct(action.productId).pipe(
+        this._productService.deleteProductAPI(action.productId).pipe(
           map(() => AppActions.removeProductSuccess()),
           catchError((error) => of(AppActions.removeProductFailure({ error })))
         )

@@ -4,6 +4,7 @@ using Products.API.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using Products.API.Entities;
 
 namespace Products.API.Controllers
 {
@@ -17,21 +18,29 @@ namespace Products.API.Controllers
 
         private readonly IProductInfoRepository _productInfoRepository;
         private readonly IMapper _mapper;
-        const int maxProductsPageSize = 20;
+        private readonly ILogger<ProductsController> _logger;
+        private readonly IMailService _mailService;
+        const int maxProductsPageSize = 30;
 
         // Constructor
-        public ProductsController(IProductInfoRepository productInfoRepository,
-            IMapper mapper) 
+        public ProductsController(IProductInfoRepository productInfoRepository, 
+            IMapper mapper, ILogger<ProductsController> logger,
+            IMailService mailService) 
         {
+            _logger = logger ??
+                throw new ArgumentNullException(nameof(logger));
+            _mailService = mailService ??
+                throw new ArgumentNullException(nameof(mailService));
             _productInfoRepository = productInfoRepository ?? throw new ArgumentNullException(nameof(productInfoRepository));
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
+        
         // Endpoints
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(
-            [FromQuery] string? name, [FromQuery] string? searchQuery, int pageNumber = 1, int pageSize = 10)
+            [FromQuery] string? name, [FromQuery] string? searchQuery, int pageNumber = 1, int pageSize = 30)
         {
             if(pageSize > maxProductsPageSize)
             {
@@ -95,6 +104,34 @@ namespace Products.API.Controllers
 
             return Ok(_mapper.Map<ProductDto>(product));
 
+        }
+
+        [HttpDelete("{productId}")]
+        public async Task<ActionResult> DeleteProduct(
+           int productId)
+        {
+            // Get product
+            if (!await _productInfoRepository.ProductExistsAsync(productId))
+            {
+                return NotFound();
+            }
+
+            // Find product
+            var product = await _productInfoRepository.GetProductAsync(productId, false);
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            _productInfoRepository.DeleteProduct(product);
+
+            await _productInfoRepository.SaveChangesAsync();
+
+            _mailService.Send(
+                "Product deleted",
+                $"Product {product.Name} with id {product.Id} was deleted.");
+
+            return NoContent();
         }
 
 

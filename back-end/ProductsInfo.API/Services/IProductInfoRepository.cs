@@ -13,9 +13,9 @@ namespace Products.API.Services
 
         Task<bool> ProductExistsAsync(int cityId);
 
-       
 
-      
+        void DeleteProduct(Product product);
+
         Task<bool> SaveChangesAsync();
 }
 }

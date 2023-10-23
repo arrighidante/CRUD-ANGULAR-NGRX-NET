@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiSettings } from '../data/interfaces/api.interface';
 import { apiConfig } from 'src/assets/config/products-api-configuration';
-import { map } from 'rxjs';
+import { map, take } from 'rxjs';
 
 @Injectable()
 export class BaseService {
@@ -18,22 +18,12 @@ export class BaseService {
     return this._http;
   }
 
-  getToken(
-    username: string = 'username',
-    password: string = 'password'
-  ): string {
-    let token = localStorage.getItem('token');
-    if (token) {
-      return token;
-    } else {
-      return this.doAuthenticate(username, password).pipe(
-        map((response: any) => {
-          console.log('Token obtenido', response);
-          localStorage.setItem('token', response);
-          return response;
-        })
-      );
-    }
+  getToken(): string | null {
+    return localStorage.getItem('token');
+  }
+
+  setToken(token: string) {
+    localStorage.setItem('token', token);
   }
 
   doAuthenticate(
@@ -42,11 +32,10 @@ export class BaseService {
   ): any {
     const url = apiConfig.authentication.url;
     const body = { username, password };
-    return this.http.post(url, body, { responseType: 'text' }).pipe(
-      map((response: any) => {
-        localStorage.setItem('token', response);
-        return response;
-      })
-    );
+    return this.http
+      .post(url, body, { responseType: 'text' })
+      .subscribe((data: any) => {
+        this.setToken(data);
+      });
   }
 }
