@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Products.API</name>
+    </assembly>
+    <members>
+        <member name="M:Products.API.Controllers.ProductsController.GetCity(System.Int32,System.Boolean)">
+            <summary>
+            Get a product by id
+            </summary>
+            <param name="id">The id of the product to get</param>
+            <param name="includeImages">Whether or not to include the images of the products</param>
+            <returns>An IActionResult</returns>
+            <response code="200">Returns the requested product</response>
+        </member>
+        <member name="T:Products.API.Migrations.InitialMySql">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.InitialMySql.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.InitialMySql.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.InitialMySql.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Products.API.Migrations.ModelUpdates">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.ModelUpdates.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.ModelUpdates.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.ModelUpdates.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>
