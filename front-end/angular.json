@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "EvoltisPruebaTecnica": {
+    "PrimeNG-NgRx-NetCore-EF-MySql": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
@@ -17,18 +17,13 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/evoltis-prueba-tecnica",
+            "outputPath": "dist/PrimeNG-NgRx-NetCore-EF-MySql",
             "index": "src/index.html",
             "main": "src/main.ts",
-            "polyfills": [
-              "zone.js"
-            ],
+            "polyfills": ["zone.js"],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
             "styles": [
               "src/styles.scss",
               "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
@@ -68,10 +63,10 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "browserTarget": "EvoltisPruebaTecnica:build:production"
+              "browserTarget": "PrimeNG-NgRx-NetCore-EF-MySql:build:production"
             },
             "development": {
-              "browserTarget": "EvoltisPruebaTecnica:build:development"
+              "browserTarget": "PrimeNG-NgRx-NetCore-EF-MySql:build:development"
             }
           },
           "defaultConfiguration": "development"
@@ -79,25 +74,17 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "EvoltisPruebaTecnica:build"
+            "browserTarget": "PrimeNG-NgRx-NetCore-EF-MySql:build"
           }
         },
         "test": {
           "builder": "@angular-devkit/build-angular:karma",
           "options": {
-            "polyfills": [
-              "zone.js",
-              "zone.js/testing"
-            ],
+            "polyfills": ["zone.js", "zone.js/testing"],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
-            "assets": [
-              "src/favicon.ico",
-              "src/assets"
-            ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "assets": ["src/favicon.ico", "src/assets"],
+            "styles": ["src/styles.scss"],
             "scripts": []
           }
         }

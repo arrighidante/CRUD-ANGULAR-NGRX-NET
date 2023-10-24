@@ -5,6 +5,7 @@ export interface DashboardState {
   status: 'success' | 'pending' | 'error' | 'loading';
   error: string | null;
   currentProduct: Product | null;
+  apiConnected: boolean;
 }
 
 export const initialState: DashboardState = {
@@ -12,4 +13,5 @@ export const initialState: DashboardState = {
   status: 'pending',
   error: null,
   currentProduct: null,
+  apiConnected: false,
 };

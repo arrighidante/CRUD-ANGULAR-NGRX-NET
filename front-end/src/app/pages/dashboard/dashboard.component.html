@@ -30,7 +30,7 @@
       <!-- BTN CONECTADO -->
 
       <p-tag
-        *ngIf="apiState$ | async as apiState"
+        *ngIf="apiStatus$ | async"
         icon="pi pi-check-circle"
         value="Conectado"
         severity="success"
@@ -38,7 +38,7 @@
       <!-- BTN DESCONECTADO -->
 
       <p-tag
-        *ngIf="!(apiState$ | async)"
+        *ngIf="!(apiStatus$ | async)"
         icon="pi pi-ban"
         value="API Desconectada"
         severity="danger"

@@ -6,6 +6,7 @@ import { Observable, Subscription, tap } from 'rxjs';
 import { Product } from 'src/app/interfaces/product.interface';
 import { ProductService } from 'src/app/services/product.service';
 import {
+  getAPIStatus,
   getProducts,
   getStatus,
 } from 'src/app/pages/dashboard/state/dashboard.reducer';
@@ -32,36 +33,37 @@ export class DashboardComponent implements OnInit {
 
   productsStatuses!: any[];
 
-  // We'll use this to show the API state (this is without NgRx)
-  apiState: boolean = false;
-  apiState$?: Observable<boolean>;
-  apiStateSubscription?: Subscription;
+  // To get API Status without NgRx
+  // apiState: boolean = false;
+  // apiState$?: Observable<boolean>;
+  // apiStateSubscription?: Subscription;
 
-  /** NGRX Selectors */
+  // region NGRX Selectors
+
   productos$!: Observable<Product[]>;
   status$!: Observable<'success' | 'pending' | 'error' | 'loading'>;
+  apiStatus$!: Observable<boolean>;
+
+  // endregion
 
   constructor(
     private confirmationService: ConfirmationService,
-    private store: Store<DashboardState>,
-    private productService: ProductService
+    private store: Store<DashboardState> // private productService: ProductService
   ) {}
 
   async ngOnInit() {
-    this.apiState$ = this.productService.getAPIState();
-
-    this.store.dispatch(AppActions.loadProducts());
-
     this.productos$ = this.store.select(getProducts);
     this.status$ = this.store.select(getStatus);
+    this.apiStatus$ = this.store.select(getAPIStatus);
+
+    this.store.dispatch(AppActions.connectAPI());
+    this.store.dispatch(AppActions.loadProducts());
 
     this.productsStatuses = [
       { label: 'EN STOCK', value: 'EN STOCK' },
       { label: 'STOCK BAJO', value: 'STOCK BAJO' },
       { label: 'SIN STOCK', value: 'SIN STOCK' },
     ];
-
-    this.productService.doAuthenticate();
   }
 
   openNew() {

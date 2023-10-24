@@ -3,6 +3,16 @@ import { Product } from '../../../interfaces/product.interface';
 
 export const loadProducts = createAction('[Dashboard] Load products');
 
+export const connectAPI = createAction('[Dashboard] Connect API');
+export const connectAPISuccess = createAction(
+  '[Dashboard] Connect API Success',
+  props<{ token: string }>()
+);
+export const connectAPIFailure = createAction(
+  '[Dashboard] Connect API Failure',
+  props<{ error: string }>()
+);
+
 export const loadProductsSuccess = createAction(
   '[Dashboard] Load Products Success',
   props<{ products: Product[] }>()
@@ -31,6 +41,7 @@ export const addProductFailure = createAction(
   '[Dashboard] Add Product Failure',
   props<{ error: string }>()
 );
+
 export const removeProduct = createAction(
   '[Dashboard] Remove Product',
   props<{

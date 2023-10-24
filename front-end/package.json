@@ -1,5 +1,5 @@
 {
-  "name": "evoltis-prueba-tecnica",
+  "name": "primeng-ngrx-netcore-ef-mysql",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",

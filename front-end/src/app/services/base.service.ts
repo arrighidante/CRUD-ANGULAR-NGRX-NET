@@ -7,9 +7,7 @@ import { BehaviorSubject, map, take } from 'rxjs';
 @Injectable()
 export class BaseService {
   private _apiConfig = apiConfig;
-  private APIState: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
+
   constructor(private _http: HttpClient) {}
 
   get api(): ApiSettings | undefined {
@@ -26,23 +24,16 @@ export class BaseService {
 
   setToken(token: string) {
     localStorage.setItem('token', token);
-    this.APIState.next(true);
   }
 
-  getAPIState() {
-    return this.APIState.asObservable();
-  }
-
-  doAuthenticate(
-    username: string = 'username',
-    password: string = 'password'
-  ): any {
+  doAuthenticate(username: string = 'username', password: string = 'password') {
     const url = apiConfig.authentication.url;
     const body = { username, password };
-    return this.http
-      .post(url, body, { responseType: 'text' })
-      .subscribe((data: any) => {
+    return this.http.post(url, body, { responseType: 'text' }).pipe(
+      map((data: any) => {
         this.setToken(data);
-      });
+        return data;
+      })
+    );
   }
 }

@@ -14,9 +14,67 @@ export class DashboardEffects {
     private _productService: ProductService
   ) {}
 
-  /**
-   * Effect that loads products from the server and dispatches success or failure actions accordingly.
-   * @returns An observable of the success or failure action.
+  /** An effect that listens for the connectAPI action and connects to the API using the ProductService.
+   * If the connection is successful, it dispatches the connectAPISuccess action with the token.
+   * If there is an error, it dispatches the connectAPIFailure action with the error.
+   */
+  connectAPI$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(AppActions.connectAPI),
+      switchMap(() =>
+        this._productService.doAuthenticate().pipe(
+          map((data: string) => AppActions.connectAPISuccess({ token: data })),
+          catchError((error) => of(AppActions.connectAPIFailure({ error })))
+        )
+      )
+    );
+  });
+
+  /** Effect that triggers when the connectAPISuccess action is dispatched.
+   * Shows a success alert and sets the token in the ProductService.
+   * @returns An observable of the action to show the success alert.
+   */
+  connectAPISuccess$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(AppActions.connectAPISuccess),
+      switchMap((action) =>
+        of(
+          ShowAlert({
+            severity: 'success',
+            summary: 'API PRODUCTOS',
+            detail: 'Conexión establecida',
+            life: 3000,
+          })
+        ).pipe(
+          tap(() => {
+            this._productService.setToken(action.token);
+          })
+        )
+      )
+    );
+  });
+
+  /** Effect that listens for the connectAPIFailure action and shows an error alert if triggered.
+   * @returns An observable of the ShowAlert action.
+   */
+  connectAPIFailure$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(AppActions.connectAPIFailure),
+      switchMap(() =>
+        of(
+          ShowAlert({
+            severity: 'error',
+            summary: 'API PRODUCTOS',
+            detail: 'Sin Conexión',
+            life: 3000,
+          })
+        )
+      )
+    );
+  });
+
+  /** An effect that loads products from the API and dispatches actions based on the result.
+   * @returns An observable of actions.
    */
   loadProducts$ = createEffect(() => {
     return this.action$.pipe(
@@ -32,8 +90,7 @@ export class DashboardEffects {
     );
   });
 
-  /**
-   * An effect that adds a new product to the store.
+  /** An effect that adds a new product to the store.
    * @returns An observable of the action to dispatch.
    */
   addProduct$ = createEffect(() => {
@@ -50,8 +107,7 @@ export class DashboardEffects {
     );
   });
 
-  /**
-   * Effect that triggers when a product is successfully added.
+  /** Effect that triggers when a product is successfully added.
    * Shows a success alert and dispatches an action to load the products.
    * @returns An observable of the action to show the success alert.
    */
@@ -66,15 +122,12 @@ export class DashboardEffects {
             detail: 'Producto Añadido',
             life: 3000,
           })
-          // ,
-          // AppActions.loadProducts()
         )
       )
     );
   });
 
-  /**
-   * Effect that removes a product from the database.
+  /** Effect that removes a product from the database.
    * @returns An observable of the removeProductSuccess action or the removeProductFailure action if an error occurs.
    */
   removeProduct$ = createEffect(() => {
@@ -89,8 +142,7 @@ export class DashboardEffects {
     );
   });
 
-  /**
-   * An effect that triggers when a product is successfully removed.
+  /** An effect that triggers when a product is successfully removed.
    * Dispatches an action to load all products.
    */
   removeProductSuccess$ = createEffect(() => {
@@ -111,8 +163,7 @@ export class DashboardEffects {
     );
   });
 
-  /**
-   * An effect that listens for the updateProduct action and updates the product using the ProductService.
+  /** An effect that listens for the updateProduct action and updates the product using the ProductService.
    * If the update is successful, it dispatches the updateProductSuccess action.
    * If there is an error, it dispatches the removeProductFailure action with the error.
    */
@@ -132,8 +183,7 @@ export class DashboardEffects {
     );
   });
 
-  /**
-   * An effect that listens for the updateProductSuccess action and triggers the loadProducts action.
+  /**  An effect that listens for the updateProductSuccess action and triggers the loadProducts action.
    * @returns An Observable of loadProducts action.
    */
   updateProductSuccess$ = createEffect(() => {

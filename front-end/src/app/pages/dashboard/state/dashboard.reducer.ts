@@ -27,6 +27,11 @@ export const getStatus = createSelector(
   (state) => state.status
 );
 
+export const getAPIStatus = createSelector(
+  getDashboardState,
+  (state) => state.apiConnected
+);
+
 export const getCurrentProductId = createSelector(
   getDashboardState,
   (state) => state.currentProduct?.id
@@ -68,6 +73,30 @@ export const getError = createSelector(
 export const dashboardReducer = createReducer<DashboardState>(
   initialState,
 
+  on(
+    AppActions.connectAPI,
+    (state): DashboardState => ({
+      ...state,
+      status: 'loading',
+    })
+  ),
+  on(
+    AppActions.connectAPISuccess,
+    (state): DashboardState => ({
+      ...state,
+      status: 'success',
+      apiConnected: true,
+    })
+  ),
+  on(
+    AppActions.connectAPIFailure,
+    (state, action): DashboardState => ({
+      ...state,
+      error: action.error,
+      status: 'error',
+      apiConnected: false,
+    })
+  ),
   on(
     AppActions.loadProducts,
     (state): DashboardState => ({

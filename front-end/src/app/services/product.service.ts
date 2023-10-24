@@ -5,7 +5,7 @@ import { BaseService } from './base.service';
 
 @Injectable()
 export class ProductService extends BaseService {
-  products: Product[] = [];
+  // products: Product[] = [];
 
   getProductsAPI(): Observable<Product[]> {
     const url = `${this.api?.apiProducts?.url}`;
@@ -414,17 +414,17 @@ export class ProductService extends BaseService {
    * @param product - The product to be updated.
    * @returns An Observable with a status and message indicating the success of the operation.
    */
-  updateProduct(product: Product) {
-    const updatedProducts = this.products.map((p) => {
-      if (p.id === product.id) {
-        return { ...p, ...product };
-      } else {
-        return p;
-      }
-    });
-    this.products = updatedProducts;
-    return of({ status: 'ok', message: 'Product updated successfully' });
-  }
+  // updateProduct(product: Product) {
+  //   const updatedProducts = this.products.map((p) => {
+  //     if (p.id === product.id) {
+  //       return { ...p, ...product };
+  //     } else {
+  //       return p;
+  //     }
+  //   });
+  //   this.products = updatedProducts;
+  //   return of({ status: 'ok', message: 'Product updated successfully' });
+  // }
 
   /** Adds a new product to the list of products.
    * @param product - The product to be added.
