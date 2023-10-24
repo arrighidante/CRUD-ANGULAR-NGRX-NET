@@ -6,7 +6,7 @@ namespace Products.API.Profiles
     {
         public ProductProfile() 
         {
-            //CreateMap<Entities.Product, Models.ProductWithImagesDto>();
+            CreateMap<Models.ProductDto, Entities.Product>();
             CreateMap<Entities.Product, Models.ProductDto>();
         }
     }

@@ -12,15 +12,20 @@ export class ProductService extends BaseService {
     return this.http.get<Product[]>(url);
   }
 
-  getProductByIdAPI(productId: any): Observable<Product> {
-    const url = `${this.api?.apiProducts?.url}/${productId.toString()}`;
-    return this.http.get<any>(url);
+  addProductAPI(product: Product) {
+    const url = `${this.api?.apiProducts?.url}`;
+    return this.http.post<Product>(url, product);
   }
 
   deleteProductAPI(productId: string) {
     const url = `${this.api?.apiProducts?.url}/${productId.toString()}`;
     return this.http.delete<any>(url);
   }
+
+  // getProductByIdAPI(productId: any): Observable<Product> {
+  //   const url = `${this.api?.apiProducts?.url}/${productId.toString()}`;
+  //   return this.http.get<any>(url);
+  // }
 
   /** Returns an array of Product objects.
    * @returns {Product[]} Array of Product objects.

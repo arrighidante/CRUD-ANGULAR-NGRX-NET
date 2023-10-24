@@ -35,9 +35,18 @@ namespace Products.API.Controllers
             _mapper = mapper ?? throw new ArgumentNullException(nameof(mapper));
         }
 
-        
+
         // Endpoints
 
+        /// <summary>
+        /// Get all products
+        /// </summary>
+        /// <param name="name">The name of the product to search for</param>
+        /// <param name="searchQuery">The search query to use</param>
+        /// <param name="pageNumber">The page number to retrieve</param>
+        /// <param name="pageSize">The number of items per page</param>
+        /// <returns>An IActionResult</returns>
+        /// <response code="200">Returns the requested product</response>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(
             [FromQuery] string? name, [FromQuery] string? searchQuery, int pageNumber = 1, int pageSize = 30)
@@ -55,8 +64,8 @@ namespace Products.API.Controllers
 
             return Ok(_mapper.Map<IEnumerable<ProductDto>>(productEntities));
 
-            /* // SOLUTION WITHOUT AUTOMAPPER: Need to map from product entity to ProductDto
-                        var results = new List<ProductDto>();
+            /* // SOLUTION WITHOUT AUTOMAPPER: Need to map from Entities.Product to ProductDto
+            var results = new List<ProductDto>();
             foreach (var productEntity in productEntities)
             {
                 results.Add(new ProductDto
@@ -77,47 +86,81 @@ namespace Products.API.Controllers
         /// Get a product by id
         /// </summary>
         /// <param name="id">The id of the product to get</param>
-        /// <param name="includeImages">Whether or not to include the images of the products</param>
         /// <returns>An IActionResult</returns>
         /// <response code="200">Returns the requested product</response>
-        [HttpGet("{id}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> GetCity(
-            int id, 
-            bool includeImages = false)
-        {
-
-            var product = await _productInfoRepository.GetProductAsync(id, includeImages);
-            
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            //if (includeImages)
-            //{
-            //    var resultado = _mapper.Map<CityDto>(product);
-            //    return Ok(resultado);
-            //}
-
-            return Ok(_mapper.Map<ProductDto>(product));
-
-        }
-
-        [HttpDelete("{productId}")]
-        public async Task<ActionResult> DeleteProduct(
+        [HttpGet("{productId}", Name = "GetProduct")]
+        public async Task<ActionResult<ProductDto>> GetProduct(
            int productId)
         {
-            // Get product
             if (!await _productInfoRepository.ProductExistsAsync(productId))
             {
                 return NotFound();
             }
 
-            // Find product
-            var product = await _productInfoRepository.GetProductAsync(productId, false);
+            var prod = await _productInfoRepository.GetProductAsync(productId);
+
+            if (prod == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(_mapper.Map<ProductDto>(prod));
+        }
+
+
+
+        /// <summary>
+        /// Creates a product
+        /// </summary>
+        /// <param name="newProduct">The product to create</param>
+        /// <returns>An IActionResult</returns>
+        /// <response code="201">Returns the newly created product</response>
+        /// <response code="400">If the product is null or invalid</response>
+        [HttpPost]
+        public async Task<ActionResult<ProductDto>> CreateProduct(ProductDto newProduct)
+        {
+            if (newProduct == null)
+            {
+                return BadRequest();
+            }
+
+            var finalProduct = _mapper.Map<Entities.Product>(newProduct);
+
+            await _productInfoRepository.AddProduct(finalProduct);
+
+            await _productInfoRepository.SaveChangesAsync();
+
+            var createdProductToReturn =
+                _mapper.Map<Models.ProductDto>(finalProduct);
+
+            return CreatedAtRoute("GetProduct",
+                new
+                {
+                    productId = createdProductToReturn.Id
+
+                },
+                createdProductToReturn);
+        }
+
+
+
+
+        /// <summary>
+        /// Deletes a product by id
+        /// </summary>
+        /// <param name="productId">The id of the product to delete</param>
+        /// <returns>An IActionResult</returns>
+        /// <response code="204">Product deleted successfully</response>
+        /// <response code="404">Product not found</response>
+        [HttpDelete("{productId}")]
+        public async Task<ActionResult> DeleteProduct(int productId)
+        {
+            if (!await _productInfoRepository.ProductExistsAsync(productId))
+            {
+                return NotFound();
+            }
+
+            var product = await _productInfoRepository.GetProductAsync(productId);
             if (product == null)
             {
                 return NotFound();

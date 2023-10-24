@@ -15,9 +15,12 @@ export const getDashboardState =
 
 //#region - - - - - - - - - SELECTORS
 
-export const getProducts = createSelector(getDashboardState, (state) => [
-  ...state.products,
-]);
+export const getProducts = createSelector(getDashboardState, (state) => {
+  const sortedProducts = [...state.products].sort((a, b) =>
+    a.name && b.name ? a.name.localeCompare(b.name) : 0
+  );
+  return sortedProducts;
+});
 
 export const getStatus = createSelector(
   getDashboardState,

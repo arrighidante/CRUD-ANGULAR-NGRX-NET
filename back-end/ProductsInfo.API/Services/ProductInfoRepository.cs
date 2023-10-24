@@ -15,16 +15,16 @@ namespace Products.API.Services
         }
 
 
-        public async Task<IEnumerable<Product>> GetProductsAsync()
-        {
-            return await _context.Products.OrderBy(c => c.Name).ToListAsync();
-        }
+        //public async Task<IEnumerable<Product>> GetProductsAsync()
+        //{
+        //    return await _context.Products.OrderBy(c => c.Name).ToListAsync();
+        //}
 
         public async Task<(IEnumerable<Product>, PaginationMetadata)> GetProductsAsync(string? name, string? searchQuery, int pageNumber, int pageSize)
         {
             //if (string.IsNullOrEmpty(name) && string.IsNullOrWhiteSpace(searchQuery))
             //{
-            //    return await GetCitiesAsync();
+            //    return await GetProductsAsync();
             //}
 
             var collection = _context.Products as IQueryable<Product>;
@@ -58,14 +58,9 @@ namespace Products.API.Services
         }
 
 
-        public async Task<Product?> GetProductAsync(int cityId, bool includePointsOfInterest)
+        public async Task<Product?> GetProductAsync(int cityId)
         {
-            //if (includePointsOfInterest)
-            //{
-            //    var resultado = await _context.Products.Include(p => p.SubObject)
-            //        .Where(c => c.Id == cityId).FirstOrDefaultAsync();
-            //    return resultado;
-            //}
+        
 
             return await _context.Products
                 .Where(c => c.Id == cityId).FirstOrDefaultAsync();
@@ -77,9 +72,10 @@ namespace Products.API.Services
         }
 
 
-
-
-
+        public async Task AddProduct(Product product)
+        {
+           _context.Products.Add(product);
+        }
 
         public void DeleteProduct(Product product)
         {

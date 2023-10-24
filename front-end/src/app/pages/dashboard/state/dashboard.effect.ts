@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as AppActions from './dashboard.actions';
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../interfaces/product.interface';
@@ -40,9 +40,9 @@ export class DashboardEffects {
     return this.action$.pipe(
       ofType(AppActions.addProduct),
       switchMap((action) =>
-        this._productService.addProduct(action.newProduct).pipe(
-          map(() =>
-            AppActions.addProductSuccess({ newProduct: action.newProduct })
+        this._productService.addProductAPI(action.newProduct).pipe(
+          map((product) =>
+            AppActions.addProductSuccess({ newProduct: product })
           ),
           catchError((error) => of(AppActions.addProductFailure({ error })))
         )
@@ -139,7 +139,7 @@ export class DashboardEffects {
   updateProductSuccess$ = createEffect(() => {
     return this.action$.pipe(
       ofType(AppActions.updateProductSuccess),
-      switchMap((action) =>
+      switchMap(() =>
         of(
           ShowAlert({
             severity: 'success',

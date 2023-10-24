@@ -128,7 +128,7 @@ export class DashboardComponent implements OnInit {
           AppActions.updateProduct({ updatedProduct: this.product })
         );
       } else {
-        this.product.id = this.createId();
+        this.product.rating = 0;
         this.product.image = 'product-placeholder.svg';
         this.store.dispatch(
           AppActions.addProduct({ newProduct: this.product })
