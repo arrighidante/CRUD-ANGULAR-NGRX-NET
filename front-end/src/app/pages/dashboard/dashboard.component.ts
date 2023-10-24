@@ -5,7 +5,10 @@ import { Table } from 'primeng/table';
 import { Observable, tap } from 'rxjs';
 import { Product } from 'src/app/interfaces/product.interface';
 import { ProductService } from 'src/app/services/product.service';
-import { getProducts } from 'src/app/pages/dashboard/state/dashboard.reducer';
+import {
+  getCurrentProduct,
+  getProducts,
+} from 'src/app/pages/dashboard/state/dashboard.reducer';
 import { DashboardState } from 'src/app/pages/dashboard/state/dashboard.state';
 import * as AppActions from 'src/app/pages/dashboard/state/dashboard.actions';
 
@@ -30,18 +33,18 @@ export class DashboardComponent implements OnInit {
   statuses!: any[];
 
   /** NGRX Selectors */
-
   productos$!: Observable<Product[]>;
 
   constructor(
     private messageService: MessageService,
     private confirmationService: ConfirmationService,
-    private store: Store<DashboardState>
+    private store: Store<DashboardState>,
+    private productService: ProductService
   ) {}
 
-  ngOnInit() {
+  async ngOnInit() {
     this.store.dispatch(AppActions.loadProducts());
-
+    // this.productService.getToken();
     this.productos$ = this.store
       .select(getProducts)
       .pipe(tap((products) => (this.products = products)));
@@ -51,6 +54,12 @@ export class DashboardComponent implements OnInit {
       { label: 'STOCK BAJO', value: 'STOCK BAJO' },
       { label: 'SIN STOCK', value: 'SIN STOCK' },
     ];
+
+    this.productService.doAuthenticate();
+
+    this.productService.getProductsAPI().subscribe((data: Product[]) => {
+      console.log('Dashboard data', data);
+    });
   }
 
   openNew() {
@@ -81,9 +90,11 @@ export class DashboardComponent implements OnInit {
 
   editProduct(product: Product) {
     this.product = { ...product };
+
     this.store.dispatch(
       AppActions.setCurrentProduct({ currentProduct: product })
     );
+
     this.productDialog = true;
   }
 
@@ -111,29 +122,21 @@ export class DashboardComponent implements OnInit {
   saveProduct() {
     this.submitted = true;
 
-    if (this.product.name?.trim()) {
+    if (this.product && this.product.name?.trim()) {
       if (this.product.id) {
-        this.products[this.findIndexById(this.product.id)] = this.product;
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Hecho',
-          detail: 'Producto Actualizado',
-          life: 3000,
-        });
+        this.store.dispatch(
+          AppActions.updateProduct({ updatedProduct: this.product })
+        );
       } else {
-        this.product.id = this.createId();
+        this.product.rating = 0;
         this.product.image = 'product-placeholder.svg';
-        this.products.push(this.product);
-        this.messageService.add({
-          severity: 'success',
-          summary: 'Hecho',
-          detail: 'Producto Creado',
-          life: 3000,
-        });
+        this.store.dispatch(
+          AppActions.addProduct({ newProduct: this.product })
+        );
       }
 
-      this.products = [...this.products];
       this.productDialog = false;
+      this.store.dispatch(AppActions.clearCurrentProduct());
       this.product = {};
     }
   }

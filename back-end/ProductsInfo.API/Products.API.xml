@@ -1,0 +1,69 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Products.API</name>
+    </assembly>
+    <members>
+        <member name="M:Products.API.Controllers.ProductsController.GetProducts(System.String,System.String,System.Int32,System.Int32)">
+            <summary>
+            Get all products
+            </summary>
+            <param name="name">The name of the product to search for</param>
+            <param name="searchQuery">The search query to use</param>
+            <param name="pageNumber">The page number to retrieve</param>
+            <param name="pageSize">The number of items per page</param>
+            <returns>An IActionResult</returns>
+            <response code="200">Returns the requested product</response>
+        </member>
+        <member name="M:Products.API.Controllers.ProductsController.GetProduct(System.Int32)">
+            <summary>
+            Get a product by id
+            </summary>
+            <param name="id">The id of the product to get</param>
+            <returns>An IActionResult</returns>
+            <response code="200">Returns the requested product</response>
+        </member>
+        <member name="M:Products.API.Controllers.ProductsController.CreateProduct(Products.API.Models.ProductDto)">
+            <summary>
+            Creates a product
+            </summary>
+            <param name="newProduct">The product to create</param>
+            <returns>An IActionResult</returns>
+            <response code="201">Returns the newly created product</response>
+            <response code="400">If the product is null or invalid</response>
+        </member>
+        <member name="M:Products.API.Controllers.ProductsController.DeleteProduct(System.Int32)">
+            <summary>
+            Deletes a product by id
+            </summary>
+            <param name="productId">The id of the product to delete</param>
+            <returns>An IActionResult</returns>
+            <response code="204">Product deleted successfully</response>
+            <response code="404">Product not found</response>
+        </member>
+        <member name="T:Products.API.Migrations.InitialMySql">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.InitialMySql.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.InitialMySql.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.InitialMySql.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Products.API.Migrations.ModelUpdates">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.ModelUpdates.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.ModelUpdates.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.ModelUpdates.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+    </members>
+</doc>

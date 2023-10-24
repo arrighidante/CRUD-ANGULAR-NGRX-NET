@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import * as AppActions from './dashboard.actions';
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../interfaces/product.interface';
@@ -22,11 +22,52 @@ export class DashboardEffects {
     return this.action$.pipe(
       ofType(AppActions.loadProducts),
       switchMap(() =>
-        this._productService.getProducts().pipe(
+        this._productService.getProductsAPI().pipe(
           map((dbProducts: Product[]) =>
             AppActions.loadProductsSuccess({ products: dbProducts })
           ),
           catchError((error) => of(AppActions.loadProductsFailure({ error })))
+        )
+      )
+    );
+  });
+
+  /**
+   * An effect that adds a new product to the store.
+   * @returns An observable of the action to dispatch.
+   */
+  addProduct$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(AppActions.addProduct),
+      switchMap((action) =>
+        this._productService.addProductAPI(action.newProduct).pipe(
+          map((product) =>
+            AppActions.addProductSuccess({ newProduct: product })
+          ),
+          catchError((error) => of(AppActions.addProductFailure({ error })))
+        )
+      )
+    );
+  });
+
+  /**
+   * Effect that triggers when a product is successfully added.
+   * Shows a success alert and dispatches an action to load the products.
+   * @returns An observable of the action to show the success alert.
+   */
+  addProductSuccess$ = createEffect(() => {
+    return this.action$.pipe(
+      ofType(AppActions.addProductSuccess),
+      switchMap(() =>
+        of(
+          ShowAlert({
+            severity: 'success',
+            summary: 'Hecho',
+            detail: 'Producto Añadido',
+            life: 3000,
+          })
+          // ,
+          // AppActions.loadProducts()
         )
       )
     );
@@ -40,7 +81,7 @@ export class DashboardEffects {
     return this.action$.pipe(
       ofType(AppActions.removeProduct),
       switchMap((action) =>
-        this._productService.deleteProduct(action.productId).pipe(
+        this._productService.deleteProductAPI(action.productId).pipe(
           map(() => AppActions.removeProductSuccess()),
           catchError((error) => of(AppActions.removeProductFailure({ error })))
         )
@@ -80,7 +121,11 @@ export class DashboardEffects {
       ofType(AppActions.updateProduct),
       switchMap((action) =>
         this._productService.updateProduct(action.updatedProduct).pipe(
-          map(() => AppActions.updateProductSuccess()),
+          map(() =>
+            AppActions.updateProductSuccess({
+              updatedProduct: action.updatedProduct,
+            })
+          ),
           catchError((error) => of(AppActions.removeProductFailure({ error })))
         )
       )
