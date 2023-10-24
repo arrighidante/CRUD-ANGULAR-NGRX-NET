@@ -2,10 +2,14 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import * as AppActions from './dashboard.actions';
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../interfaces/product.interface';
 import { ShowAlert } from 'src/app/components/state/message.actions';
+import {
+  ConnectAPIActions,
+  LoadProductActions,
+  ProductActions,
+} from './dashboard.actions';
 
 @Injectable()
 export class DashboardEffects {
@@ -20,11 +24,15 @@ export class DashboardEffects {
    */
   connectAPI$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.connectAPI),
+      ofType(ConnectAPIActions.connectAPI),
       switchMap(() =>
         this._productService.doAuthenticate().pipe(
-          map((data: string) => AppActions.connectAPISuccess({ token: data })),
-          catchError((error) => of(AppActions.connectAPIFailure({ error })))
+          map((data: string) =>
+            ConnectAPIActions.connectAPISuccess({ token: data })
+          ),
+          catchError((error) =>
+            of(ConnectAPIActions.connectAPIFailure({ error }))
+          )
         )
       )
     );
@@ -36,7 +44,7 @@ export class DashboardEffects {
    */
   connectAPISuccess$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.connectAPISuccess),
+      ofType(ConnectAPIActions.connectAPISuccess),
       switchMap((action) =>
         of(
           ShowAlert({
@@ -59,7 +67,7 @@ export class DashboardEffects {
    */
   connectAPIFailure$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.connectAPIFailure),
+      ofType(ConnectAPIActions.connectAPIFailure),
       switchMap(() =>
         of(
           ShowAlert({
@@ -78,13 +86,17 @@ export class DashboardEffects {
    */
   loadProducts$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.loadProducts),
+      ofType(LoadProductActions.loadProducts),
       switchMap(() =>
         this._productService.getProductsAPI().pipe(
           map((dbProducts: Product[]) =>
-            AppActions.loadProductsSuccess({ products: dbProducts })
+            LoadProductActions.loadProductsSuccess({
+              products: dbProducts,
+            })
           ),
-          catchError((error) => of(AppActions.loadProductsFailure({ error })))
+          catchError((error) =>
+            of(LoadProductActions.loadProductsFailure({ error }))
+          )
         )
       )
     );
@@ -95,13 +107,13 @@ export class DashboardEffects {
    */
   addProduct$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.addProduct),
+      ofType(ProductActions.addProduct),
       switchMap((action) =>
         this._productService.addProductAPI(action.newProduct).pipe(
           map((product) =>
-            AppActions.addProductSuccess({ newProduct: product })
+            ProductActions.addProductSuccess({ newProduct: product })
           ),
-          catchError((error) => of(AppActions.addProductFailure({ error })))
+          catchError((error) => of(ProductActions.addProductFailure({ error })))
         )
       )
     );
@@ -113,7 +125,7 @@ export class DashboardEffects {
    */
   addProductSuccess$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.addProductSuccess),
+      ofType(ProductActions.addProductSuccess),
       switchMap(() =>
         of(
           ShowAlert({
@@ -132,11 +144,13 @@ export class DashboardEffects {
    */
   removeProduct$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.removeProduct),
+      ofType(ProductActions.removeProduct),
       switchMap((action) =>
         this._productService.deleteProductAPI(action.productId).pipe(
-          map(() => AppActions.removeProductSuccess()),
-          catchError((error) => of(AppActions.removeProductFailure({ error })))
+          map(() => ProductActions.removeProductSuccess()),
+          catchError((error) =>
+            of(ProductActions.removeProductFailure({ error }))
+          )
         )
       )
     );
@@ -147,7 +161,7 @@ export class DashboardEffects {
    */
   removeProductSuccess$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.removeProductSuccess),
+      ofType(ProductActions.removeProductSuccess),
       switchMap(() =>
         of(
           ShowAlert({
@@ -157,7 +171,7 @@ export class DashboardEffects {
             life: 3000,
           }),
 
-          AppActions.loadProducts()
+          LoadProductActions.loadProducts()
         )
       )
     );
@@ -169,15 +183,17 @@ export class DashboardEffects {
    */
   updateProduct$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.updateProduct),
+      ofType(ProductActions.updateProduct),
       switchMap((action) =>
         this._productService.updateProductAPI(action.updatedProduct).pipe(
           map((updatedProduct) =>
-            AppActions.updateProductSuccess({
+            ProductActions.updateProductSuccess({
               updatedProduct: updatedProduct,
             })
           ),
-          catchError((error) => of(AppActions.removeProductFailure({ error })))
+          catchError((error) =>
+            of(ProductActions.removeProductFailure({ error }))
+          )
         )
       )
     );
@@ -188,7 +204,7 @@ export class DashboardEffects {
    */
   updateProductSuccess$ = createEffect(() => {
     return this.action$.pipe(
-      ofType(AppActions.updateProductSuccess),
+      ofType(ProductActions.updateProductSuccess),
       switchMap(() =>
         of(
           ShowAlert({
@@ -198,7 +214,7 @@ export class DashboardEffects {
             life: 3000,
           }),
 
-          AppActions.loadProducts()
+          LoadProductActions.loadProducts()
         )
       )
     );

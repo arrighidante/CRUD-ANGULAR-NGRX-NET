@@ -74,14 +74,14 @@ export const dashboardReducer = createReducer<DashboardState>(
   initialState,
 
   on(
-    AppActions.connectAPI,
+    AppActions.ConnectAPIActions.connectAPI,
     (state): DashboardState => ({
       ...state,
       status: 'loading',
     })
   ),
   on(
-    AppActions.connectAPISuccess,
+    AppActions.ConnectAPIActions.connectAPISuccess,
     (state): DashboardState => ({
       ...state,
       status: 'success',
@@ -89,7 +89,7 @@ export const dashboardReducer = createReducer<DashboardState>(
     })
   ),
   on(
-    AppActions.connectAPIFailure,
+    AppActions.ConnectAPIActions.connectAPIFailure,
     (state, action): DashboardState => ({
       ...state,
       error: action.error,
@@ -98,7 +98,7 @@ export const dashboardReducer = createReducer<DashboardState>(
     })
   ),
   on(
-    AppActions.loadProducts,
+    AppActions.LoadProductActions.loadProducts,
     (state): DashboardState => ({
       ...state,
       status: 'loading',
@@ -106,7 +106,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.loadProductsSuccess,
+    AppActions.LoadProductActions.loadProductsSuccess,
     (state, action): DashboardState => ({
       ...state,
       status: 'success',
@@ -115,7 +115,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.loadProductsFailure,
+    AppActions.LoadProductActions.loadProductsFailure,
     (state, action): DashboardState => ({
       ...state,
       error: action.error,
@@ -124,7 +124,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.addProduct,
+    AppActions.ProductActions.addProduct,
     (state): DashboardState => ({
       ...state,
       status: 'loading',
@@ -132,7 +132,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.addProductSuccess,
+    AppActions.ProductActions.addProductSuccess,
     (state, action): DashboardState => ({
       ...state,
       status: 'success',
@@ -141,7 +141,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.addProductFailure,
+    AppActions.ProductActions.addProductFailure,
     (state, action): DashboardState => ({
       ...state,
       error: action.error,
@@ -149,7 +149,7 @@ export const dashboardReducer = createReducer<DashboardState>(
     })
   ),
   on(
-    AppActions.removeProduct,
+    AppActions.ProductActions.removeProduct,
     (state): DashboardState => ({
       ...state,
       status: 'loading',
@@ -157,7 +157,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.removeProductSuccess,
+    AppActions.ProductActions.removeProductSuccess,
     (state): DashboardState => ({
       ...state,
       status: 'success',
@@ -165,7 +165,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.removeProductFailure,
+    AppActions.ProductActions.removeProductFailure,
     (state, action): DashboardState => ({
       ...state,
       error: action.error,
@@ -174,7 +174,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.updateProduct,
+    AppActions.ProductActions.updateProduct,
     (state): DashboardState => ({
       ...state,
       status: 'loading',
@@ -182,7 +182,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.updateProductSuccess,
+    AppActions.ProductActions.updateProductSuccess,
     (state): DashboardState => ({
       ...state,
       status: 'success',
@@ -190,7 +190,7 @@ export const dashboardReducer = createReducer<DashboardState>(
   ),
 
   on(
-    AppActions.updateProductFailure,
+    AppActions.ProductActions.updateProductFailure,
     (state, action): DashboardState => ({
       ...state,
       error: action.error,

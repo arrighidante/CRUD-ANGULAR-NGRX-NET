@@ -56,8 +56,8 @@ export class DashboardComponent implements OnInit {
     this.status$ = this.store.select(getStatus);
     this.apiStatus$ = this.store.select(getAPIStatus);
 
-    this.store.dispatch(AppActions.connectAPI());
-    this.store.dispatch(AppActions.loadProducts());
+    this.store.dispatch(AppActions.ConnectAPIActions.connectAPI());
+    this.store.dispatch(AppActions.LoadProductActions.loadProducts());
 
     this.productsStatuses = [
       { label: 'EN STOCK', value: 'EN STOCK' },
@@ -90,7 +90,7 @@ export class DashboardComponent implements OnInit {
       accept: () => {
         if (product.id) {
           this.store.dispatch(
-            AppActions.removeProduct({ productId: product.id })
+            AppActions.ProductActions.removeProduct({ productId: product.id })
           );
         }
       },
@@ -109,13 +109,15 @@ export class DashboardComponent implements OnInit {
     if (this.product && this.product.name?.trim()) {
       if (this.product.id) {
         this.store.dispatch(
-          AppActions.updateProduct({ updatedProduct: this.product })
+          AppActions.ProductActions.updateProduct({
+            updatedProduct: this.product,
+          })
         );
       } else {
         this.product.rating = 0;
         this.product.image = 'product-placeholder.svg';
         this.store.dispatch(
-          AppActions.addProduct({ newProduct: this.product })
+          AppActions.ProductActions.addProduct({ newProduct: this.product })
         );
       }
 

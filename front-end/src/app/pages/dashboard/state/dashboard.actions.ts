@@ -1,79 +1,55 @@
-import { createAction, props } from '@ngrx/store';
+import {
+  createAction,
+  createActionGroup,
+  emptyProps,
+  props,
+} from '@ngrx/store';
 import { Product } from '../../../interfaces/product.interface';
 
-export const loadProducts = createAction('[Dashboard] Load products');
+export const ConnectAPIActions = createActionGroup({
+  source: 'API',
+  events: {
+    'Connect API': emptyProps(),
 
-export const connectAPI = createAction('[Dashboard] Connect API');
-export const connectAPISuccess = createAction(
-  '[Dashboard] Connect API Success',
-  props<{ token: string }>()
-);
-export const connectAPIFailure = createAction(
-  '[Dashboard] Connect API Failure',
-  props<{ error: string }>()
-);
+    'Connect API Success': props<{ token: string }>(),
 
-export const loadProductsSuccess = createAction(
-  '[Dashboard] Load Products Success',
-  props<{ products: Product[] }>()
-);
+    'Connect API Failure': props<{ error: string }>(),
+  },
+});
 
-export const loadProductsFailure = createAction(
-  '[Dashboard] Load Products Failure',
-  props<{ error: string }>()
-);
+export const ProductActions = createActionGroup({
+  source: 'Products',
+  events: {
+    'Add Product': props<{ newProduct: Product }>(),
 
-export const addProduct = createAction(
-  '[Dashboard] Add Product',
-  props<{
-    newProduct: Product;
-  }>()
-);
+    'Add Product Success': props<{ newProduct: Product }>(),
 
-export const addProductSuccess = createAction(
-  '[Dashboard] Add Product Success',
-  props<{
-    newProduct: Product;
-  }>()
-);
+    'Add Product Failure': props<{ error: string }>(),
 
-export const addProductFailure = createAction(
-  '[Dashboard] Add Product Failure',
-  props<{ error: string }>()
-);
+    'Remove Product': props<{ productId: number }>(),
 
-export const removeProduct = createAction(
-  '[Dashboard] Remove Product',
-  props<{
-    productId: number;
-  }>()
-);
+    'Remove Product Success': emptyProps(),
 
-export const removeProductSuccess = createAction(
-  '[Dashboard] Remove Product Success'
-);
+    'Remove Product Failure': props<{ error: string }>(),
 
-export const removeProductFailure = createAction(
-  '[Dashboard] Remove Product Failure',
-  props<{ error: string }>()
-);
+    'Update Product': props<{ updatedProduct: Product }>(),
 
-export const updateProduct = createAction(
-  '[Dashboard] Update Product',
-  props<{
-    updatedProduct: Product;
-  }>()
-);
+    'Update Product Success': props<{ updatedProduct: Product }>(),
 
-export const updateProductSuccess = createAction(
-  '[Dashboard] Update Product Success',
-  props<{ updatedProduct: Product }>()
-);
+    'Update Product Failure': props<{ error: string }>(),
+  },
+});
 
-export const updateProductFailure = createAction(
-  '[Dashboard] Update Product Failure',
-  props<{ error: string }>()
-);
+export const LoadProductActions = createActionGroup({
+  source: 'Dashboard',
+  events: {
+    'Load Products': emptyProps(),
+
+    'Load Products Success': props<{ products: Product[] }>(),
+
+    'Load Products Failure': props<{ error: string }>(),
+  },
+});
 
 export const setCurrentProduct = createAction(
   '[Dashboard] Set Current Product',
