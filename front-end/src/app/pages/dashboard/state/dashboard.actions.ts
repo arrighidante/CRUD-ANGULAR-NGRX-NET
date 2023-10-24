@@ -34,7 +34,7 @@ export const addProductFailure = createAction(
 export const removeProduct = createAction(
   '[Dashboard] Remove Product',
   props<{
-    productId: string;
+    productId: number;
   }>()
 );
 

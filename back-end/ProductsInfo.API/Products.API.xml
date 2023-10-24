@@ -41,6 +41,16 @@
             <response code="204">Product deleted successfully</response>
             <response code="404">Product not found</response>
         </member>
+        <member name="M:Products.API.Controllers.ProductsController.UpdateProduct(System.Int32,Products.API.Models.ProductForUpdateDto)">
+            <summary>
+            Updates a product by id
+            </summary>
+            <param name="productId">The id of the product to update</param>
+            <param name="productForUpdateDto">The updated product information</param>
+            <returns>An IActionResult</returns>
+            <response code="204">Product updated successfully</response>
+            <response code="404">Product not found</response>
+        </member>
         <member name="T:Products.API.Migrations.InitialMySql">
             <inheritdoc />
         </member>
@@ -63,6 +73,18 @@
             <inheritdoc />
         </member>
         <member name="M:Products.API.Migrations.ModelUpdates.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:Products.API.Migrations.updateProductModel">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.updateProductModel.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.updateProductModel.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:Products.API.Migrations.updateProductModel.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
             <inheritdoc />
         </member>
     </members>

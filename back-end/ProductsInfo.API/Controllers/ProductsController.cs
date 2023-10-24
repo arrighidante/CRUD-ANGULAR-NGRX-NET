@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Products.API.Entities;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Products.API.Controllers
 {
@@ -176,6 +177,85 @@ namespace Products.API.Controllers
 
             return NoContent();
         }
+
+
+        /// <summary>
+        /// Updates a product by id
+        /// </summary>
+        /// <param name="productId">The id of the product to update</param>
+        /// <param name="productForUpdateDto">The updated product information</param>
+        /// <returns>An IActionResult</returns>
+        /// <response code="204">Product updated successfully</response>
+        /// <response code="404">Product not found</response>
+        [HttpPut("{productId}")]
+        public async Task<ActionResult> UpdateProduct(int productId, ProductForUpdateDto productForUpdateDto)
+        {
+            var productEntity = await _productInfoRepository.GetProductAsync(productId);
+            if (productEntity == null)
+            {
+                return NotFound();
+            }
+
+            _mapper.Map(productForUpdateDto, productEntity);
+
+            await _productInfoRepository.SaveChangesAsync();
+
+            //return NoContent();
+            return CreatedAtRoute("GetProduct",
+               new
+               {
+                   productId = productEntity.Id
+
+               },
+               productEntity);
+        }
+
+
+
+
+        /// <summary>
+        /// Partially update a product by id
+        /// </summary>
+        /// <param name="productId">The id of the product to update</param>
+        /// <param name="patchDocument">The JsonPatchDocument containing the operations to apply to the product</param>
+        /// <returns>An IActionResult</returns>
+        /// <response code="204">Product updated successfully</response>
+        /// <response code="404">Product not found</response>
+
+        // FIXME: Unfinished functionality
+
+        //[HttpPatch("{productId}")]
+        //public async Task<ActionResult> PartiallyUpdateProduct(
+        //    int productId, JsonPatchDocument<ProductForUpdateDto> patchDocument)
+        //{
+        //    // Find product
+        //    var productEntity = await _productInfoRepository.GetProductAsync(productId);
+
+        //    if (productEntity == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var productToPatch = _mapper.Map<ProductForUpdateDto>(productEntity);
+
+        //    patchDocument.ApplyTo(productToPatch, ModelState);
+
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    if (!TryValidateModel(productToPatch))
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
+
+        //    _mapper.Map(productToPatch, productEntity);
+
+        //    await _productInfoRepository.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
 
 
     }

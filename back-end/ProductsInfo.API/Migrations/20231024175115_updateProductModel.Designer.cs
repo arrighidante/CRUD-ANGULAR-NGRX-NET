@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Products.API.DbContexts;
 
@@ -10,9 +11,11 @@ using Products.API.DbContexts;
 namespace Products.API.Migrations
 {
     [DbContext(typeof(ProductInfoContext))]
-    partial class CityInfoContextModelSnapshot : ModelSnapshot
+    [Migration("20231024175115_updateProductModel")]
+    partial class updateProductModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

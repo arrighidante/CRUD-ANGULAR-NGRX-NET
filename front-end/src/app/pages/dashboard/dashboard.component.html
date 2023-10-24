@@ -18,30 +18,40 @@
       <button
         pButton
         pRipple
-        label="Eliminar"
-        icon="pi pi-trash"
-        class="p-button-danger"
-        (click)="deleteSelectedProducts()"
-        [disabled]="!selectedProducts || !selectedProducts.length"
+        [label]="
+          selectedProducts && selectedProducts.length > 0
+            ? selectedProducts.length + ' seleccionados'
+            : ''
+        "
+        icon="pi pi-check"
+        class="p-button-warning"
+        *ngIf="selectedProducts && selectedProducts.length"
       ></button>
-      <!-- <p-fileUpload
-        mode="basic"
-        accept="image/*"
-        [maxFileSize]="1000000"
-        label="Import"
-        chooseLabel="Import"
-        class="mr-2 inline-block"
-      ></p-fileUpload>
-      <button
-        pButton
-        pRipple
-        label="Export"
-        icon="pi pi-upload"
-        class="p-button-help"
-      ></button> -->
+      <!-- BTN CONECTADO -->
+
+      <p-tag
+        *ngIf="apiState$ | async as apiState"
+        icon="pi pi-check-circle"
+        value="Conectado"
+        severity="success"
+      ></p-tag>
+      <!-- BTN DESCONECTADO -->
+
+      <p-tag
+        *ngIf="!(apiState$ | async)"
+        icon="pi pi-ban"
+        value="API Desconectada"
+        severity="danger"
+      ></p-tag>
+    </ng-template>
+    <ng-template pTemplate="center" *ngIf="status$ | async as status">
+      <p-progressSpinner
+        *ngIf="status === 'loading'"
+        strokeWidth="2"
+        styleClass="w-2rem h-2rem"
+      ></p-progressSpinner>
     </ng-template>
   </p-toolbar>
-
   <p-table
     *ngIf="productos$ | async as products"
     #dt
@@ -208,7 +218,7 @@
       <p-dropdown
         [(ngModel)]="product.inventoryStatus"
         inputId="inventoryStatus"
-        [options]="statuses"
+        [options]="productsStatuses"
       >
         <ng-template pTemplate="selectedItem">
           <p-tag

@@ -1,13 +1,14 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Products.API.Models
 {
-    public class ProductDto
+    public class ProductForUpdateDto
     {
-       public int? Id { get; set; }
+        //[Required(ErrorMessage = "You should provide a name value.")]
+        //[MaxLength(50)]
+        public string Name { get; set; } = string.Empty;
 
-        public string Name { get; set; }
+        public int? Id { get; set; }
 
 
         public string? Description { get; set; }
@@ -24,8 +25,5 @@ namespace Products.API.Models
 
         public int? Rating { get; set; }
 
-
-
-       
     }
 }

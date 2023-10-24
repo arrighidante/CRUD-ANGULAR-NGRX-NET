@@ -120,10 +120,10 @@ export class DashboardEffects {
     return this.action$.pipe(
       ofType(AppActions.updateProduct),
       switchMap((action) =>
-        this._productService.updateProduct(action.updatedProduct).pipe(
-          map(() =>
+        this._productService.updateProductAPI(action.updatedProduct).pipe(
+          map((updatedProduct) =>
             AppActions.updateProductSuccess({
-              updatedProduct: action.updatedProduct,
+              updatedProduct: updatedProduct,
             })
           ),
           catchError((error) => of(AppActions.removeProductFailure({ error })))

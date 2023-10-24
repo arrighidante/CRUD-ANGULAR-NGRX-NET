@@ -37,10 +37,9 @@ export const getCurrentProduct = createSelector(
   getCurrentProductId,
   (state, currentProductId) => {
     let cProduct: Product;
-    if (currentProductId === '0') {
+    if (currentProductId === 0) {
       cProduct = {
-        id: '',
-        code: '',
+        id: 0,
         name: '',
         description: '',
         image: '',
