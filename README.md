@@ -2,7 +2,7 @@
 This is a CRUD example with both front and back end. <br>
 It is a CRUD of Products. (Angular + PrimeNG + NgRx + .NET + EFCore + MySql)
 
-# 💻 Tech Stack:
+# 💻 Tech Stack
 ![Angular](https://img.shields.io/badge/Angular-%23DD0031.svg?style=for-the-badge&logo=angular&logoColor=white)
 ![NgRx](https://img.shields.io/badge/NgRx-%233f51b5.svg?style=for-the-badge&logo=ngrx&logoColor=white)
 ![PrimeNG](https://img.shields.io/badge/PrimeNG-%23880000.svg?style=for-the-badge&logo=primeng&logoColor=white)
