@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DashboardRoutingModule } from './pages/dashboard/dashboard-routing.module';
-import { UserComponent } from './pages/user/user.component';
+import { UsersComponent } from './pages/users/users.component';
 const routes: Routes = [
   {
     path: 'dashboard',
@@ -11,8 +11,8 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'dashboard/user',
-    component: UserComponent,
+    path: 'users',
+    component: UsersComponent,
   },
   {
     path: '**',

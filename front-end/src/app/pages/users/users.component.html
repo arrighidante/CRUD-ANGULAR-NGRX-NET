@@ -1,0 +1,434 @@
+<div class="card">
+  <p-table
+    #dt
+    [value]="users"
+    [(selection)]="selectedUsers"
+    dataKey="id"
+    [rowHover]="true"
+    [rows]="10"
+    [showCurrentPageReport]="true"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    [loading]="loading"
+    [paginator]="true"
+    currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries"
+    [filterDelay]="0"
+    [globalFilterFields]="[
+      'name',
+      'country.name',
+      'representative.name',
+      'status'
+    ]"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header">
+        Lista de usuarios
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            (input)="onSearchInputChange($event)"
+            placeholder="Buscar..."
+          />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 4rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="name" style="min-width: 14rem">
+          <div class="flex justify-content-between align-items-center">
+            Nombre
+            <p-sortIcon field="name"></p-sortIcon>
+            <p-columnFilter
+              type="text"
+              field="name"
+              display="menu"
+              class="ml-auto"
+            ></p-columnFilter>
+          </div>
+        </th>
+        <th pSortableColumn="country.name" style="min-width: 14rem">
+          <div class="flex justify-content-between align-items-center">
+            País
+            <p-sortIcon field="country.name"></p-sortIcon>
+            <p-columnFilter
+              type="text"
+              field="country.name"
+              display="menu"
+              class="ml-auto"
+            ></p-columnFilter>
+          </div>
+        </th>
+        <th pSortableColumn="representative.name" style="min-width: 14rem">
+          <div class="flex justify-content-between align-items-center">
+            Agente
+            <p-sortIcon field="representative.name"></p-sortIcon>
+            <p-columnFilter
+              field="representative"
+              matchMode="in"
+              display="menu"
+              [showMatchModes]="false"
+              [showOperator]="false"
+              [showAddButton]="false"
+              class="ml-auto"
+            >
+              <ng-template pTemplate="header">
+                <div class="px-3 pt-3 pb-0">
+                  <span class="font-bold">Agent Picker</span>
+                </div>
+              </ng-template>
+              <ng-template
+                pTemplate="filter"
+                let-value
+                let-filter="filterCallback"
+              >
+                <p-multiSelect
+                  [ngModel]="value"
+                  [options]="representatives"
+                  placeholder="Any"
+                  (onChange)="filter($event.value)"
+                  optionLabel="name"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <div class="inline-block vertical-align-middle">
+                      <img
+                        [alt]="option.label"
+                        src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{
+                          option.image
+                        }}"
+                        width="24"
+                        class="vertical-align-middle"
+                      />
+                      <span class="ml-1 mt-1">{{ option.name }}</span>
+                    </div>
+                  </ng-template>
+                </p-multiSelect>
+              </ng-template>
+            </p-columnFilter>
+          </div>
+        </th>
+        <th pSortableColumn="date" style="min-width: 10rem">
+          <div class="flex justify-content-between align-items-center">
+            Fecha
+            <p-sortIcon field="date"></p-sortIcon>
+            <p-columnFilter
+              type="date"
+              field="date"
+              display="menu"
+              class="ml-auto"
+            ></p-columnFilter>
+          </div>
+        </th>
+        <th pSortableColumn="balance" style="min-width: 10rem">
+          <div class="flex justify-content-between align-items-center">
+            Balance
+            <p-sortIcon field="balance"></p-sortIcon>
+            <p-columnFilter
+              type="numeric"
+              field="balance"
+              display="menu"
+              currency="USD"
+              class="ml-auto"
+            ></p-columnFilter>
+          </div>
+        </th>
+        <th pSortableColumn="status" style="min-width: 10rem">
+          <div class="flex justify-content-between align-items-center">
+            Estado
+            <p-sortIcon field="status"></p-sortIcon>
+            <p-columnFilter
+              field="status"
+              matchMode="equals"
+              display="menu"
+              class="ml-auto"
+            >
+              <ng-template
+                pTemplate="filter"
+                let-value
+                let-filter="filterCallback"
+              >
+                <p-dropdown
+                  [ngModel]="value"
+                  [options]="statuses"
+                  (onChange)="filter($event.value)"
+                  placeholder="Todos"
+                >
+                  <ng-template let-option pTemplate="item">
+                    <p-tag
+                      [value]="option.label"
+                      [severity]="getSeverity(option.label)"
+                    ></p-tag>
+                  </ng-template>
+                </p-dropdown>
+              </ng-template>
+            </p-columnFilter>
+          </div>
+        </th>
+        <th pSortableColumn="activity" style="min-width: 10rem">
+          <div class="flex justify-content-between align-items-center">
+            % Ser contratado
+
+            <p-columnFilter
+              field="getHiredChance"
+              matchMode="between"
+              display="menu"
+              [showMatchModes]="false"
+              [showOperator]="false"
+              [showAddButton]="false"
+              class="ml-auto"
+            >
+              <ng-template pTemplate="filter" let-filter="filterCallback">
+                <p-slider
+                  [ngModel]="activityValues"
+                  [range]="true"
+                  (onSlideEnd)="filter($event.values)"
+                  styleClass="m-3"
+                ></p-slider>
+                <div
+                  class="flex align-items-center justify-content-between px-2"
+                >
+                  <span>{{ activityValues[0] }}</span>
+                  <span>{{ activityValues[1] }}</span>
+                </div>
+              </ng-template>
+            </p-columnFilter>
+          </div>
+        </th>
+        <th style="width: 5rem"></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-user>
+      <tr class="p-selectable-row">
+        <td>
+          <p-tableCheckbox [value]="user"></p-tableCheckbox>
+        </td>
+        <td>
+          <span class="p-column-title">Name</span>
+          {{ user.name }}
+        </td>
+        <td>
+          <span class="p-column-title">Country</span>
+          <img
+            src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png"
+            [class]="'flag flag-' + user.country.code"
+            style="width: 20px"
+          />
+          <span class="ml-1 vertical-align-middle">{{
+            user.country.name
+          }}</span>
+        </td>
+        <td>
+          <span class="p-column-title">Representative</span>
+          <img
+            [alt]="user.representative.name"
+            src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{
+              user.representative.image
+            }}"
+            width="32"
+            style="vertical-align: middle"
+          />
+          <span class="ml-1 vertical-align-middle">{{
+            user.representative.name
+          }}</span>
+        </td>
+        <td>
+          <span class="p-column-title">Date</span>
+          {{ user.date | date : 'MM/dd/yyyy' }}
+        </td>
+        <td>
+          <span class="p-column-title">Balance</span>
+          {{ user.balance | currency : 'USD' : 'symbol' }}
+        </td>
+        <td>
+          <span class="p-column-title">Status</span>
+          <p-tag
+            [value]="getStatusLabel(user.status)"
+            [severity]="getSeverity(user.status)"
+          ></p-tag>
+        </td>
+        <td>
+          <span class="p-column-title">Activity</span>
+          <p-progressBar
+            [value]="user.getHiredChance"
+            [showValue]="false"
+          ></p-progressBar>
+        </td>
+        <td style="text-align: center">
+          <button
+            pButton
+            type="button"
+            label="Editar"
+            class="p-button-secondary"
+            icon="pi pi-cog"
+            (click)="editUser(user)"
+          ></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="8">No hay usuarios registrados.</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<!-- MODAL/DIALOG PRODUCTO -->
+<p-dialog
+  [(visible)]="userDialog"
+  [style]="{ width: '80%', height: '80%' }"
+  header="Datos del usuario"
+  [modal]="true"
+  styleClass="p-fluid"
+  [closeOnEscape]="false"
+  [closable]="false"
+>
+  <ng-template pTemplate="content">
+    <form [formGroup]="userForm">
+      <div class="field">
+        <label for="name">Nombre</label>
+        <input
+          formControlName="name"
+          type="text"
+          pInputText
+          id="name"
+          required
+          autofocus
+        />
+        <small class="p-error" *ngIf="userForm?.get('name')?.invalid"
+          >Nombre requerido</small
+        >
+      </div>
+
+      <div class="field">
+        <label for="inventoryStatus">Estado</label>
+        <p-dropdown
+          inputId="inventoryStatus"
+          formControlName="status"
+          [options]="statuses"
+        >
+          <ng-template pTemplate="selectedItem">
+            <p-tag
+              [value]="getStatusLabel(userForm.get('status')?.value)"
+              [severity]="getSeverity(selectedUser.status?.toUpperCase() || '')"
+            ></p-tag>
+          </ng-template>
+          <ng-template let-option pTemplate="item">
+            <p-tag
+              [value]="option.label"
+              [severity]="getSeverity(option.label)"
+            ></p-tag>
+          </ng-template>
+        </p-dropdown>
+      </div>
+
+      <div class="field">
+        <label for="balance">Balance</label>
+        <p-inputNumber
+          id="balance"
+          formControlName="balance"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+        ></p-inputNumber>
+      </div>
+      <div class="field">
+        <label for="getHiredChance">% ser contratado</label>
+        <p-inputNumber
+          id="getHiredChance"
+          formControlName="getHiredChance"
+          locale="en-US"
+        ></p-inputNumber>
+      </div>
+      <div class="field">
+        <label for="date">Fecha </label>
+        <p-calendar formControlName="date"></p-calendar>
+      </div>
+      <!-- <div class="field">
+      <label class="mb-3">Categoría</label>
+      <div class="formgrid grid">
+        <div class="field-radiobutton col-6">
+          <p-radioButton
+            id="category1"
+            name="category"
+            value="Accesorios"
+            [(ngModel)]="product.category"
+          ></p-radioButton>
+          <label for="category1">Accesorios</label>
+        </div>
+        <div class="field-radiobutton col-6">
+          <p-radioButton
+            id="category2"
+            name="category"
+            value="Vestimenta"
+            [(ngModel)]="product.category"
+          ></p-radioButton>
+          <label for="category2">Vestimenta</label>
+        </div>
+        <div class="field-radiobutton col-6">
+          <p-radioButton
+            id="category3"
+            name="category"
+            value="Electronica"
+            [(ngModel)]="product.category"
+          ></p-radioButton>
+          <label for="category3">Electrónica</label>
+        </div>
+        <div class="field-radiobutton col-6">
+          <p-radioButton
+            id="category4"
+            name="category"
+            value="Fitness"
+            [(ngModel)]="product.category"
+          ></p-radioButton>
+          <label for="category4">Fitness</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="formgrid grid">
+      <div class="field col">
+        <label for="price">Precio</label>
+        <p-inputNumber
+          id="price"
+          [(ngModel)]="product.price"
+          mode="currency"
+          currency="USD"
+          locale="en-US"
+        ></p-inputNumber>
+      </div>
+      <div class="field col">
+        <label for="quantity">Cantidad</label>
+        <p-inputNumber
+          id="quantity"
+          [(ngModel)]="product.quantity"
+        ></p-inputNumber>
+      </div>
+    </div> -->
+    </form>
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      pRipple
+      label="Cancelar"
+      icon="pi pi-times"
+      class="p-button-text"
+      (click)="hideDialog()"
+    ></button>
+    <button
+      pButton
+      pRipple
+      label="Guardar"
+      icon="pi pi-check"
+      class="p-button-text"
+      (click)="saveProduct()"
+    ></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{ width: '450px' }"></p-confirmDialog>

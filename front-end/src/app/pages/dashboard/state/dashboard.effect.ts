@@ -4,12 +4,12 @@ import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ProductService } from '../../../services/product.service';
 import { Product } from '../../../interfaces/product.interface';
-import { ShowAlert } from 'src/app/components/state/message.actions';
 import {
   ConnectAPIActions,
   LoadProductActions,
   ProductActions,
 } from './dashboard.actions';
+import { ShowAlert } from 'src/app/shared/messages/message.actions';
 
 @Injectable()
 export class DashboardEffects {
