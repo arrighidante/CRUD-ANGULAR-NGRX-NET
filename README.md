@@ -17,9 +17,8 @@ It is a CRUD of Products. (Angular + PrimeNG + NgRx + .NET + EFCore + MySql)
 
 # 👨‍🏫 Instructions for execution
 - Clone Repo
-- - Front end:
-  - In the root directory, run npm i
-  - Run "ng serve -o" to run the project. The browser will open automatically.
+- In the root directory, run npm i
+- Run "ng serve -o" to run the project. The browser will open automatically.
  <br>
 
 👏 ¡Please, give me a ⭐️ if you like my repo or if you find it useful!
