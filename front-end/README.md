@@ -1,4 +1,4 @@
-# Challenge
+# Description
 
 Este proyecto fue generado con [Angular CLI](https://github.com/angular/angular-cli) versión 16.2.0. <br>
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) versión 16.2.0.
@@ -13,5 +13,4 @@ Run `ng serve -o` to run dev server. Go to `http://localhost:4200/`. When source
 
 ## Developed by
 Dante Arrighi
-
 
