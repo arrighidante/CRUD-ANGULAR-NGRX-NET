@@ -1,17 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { ConfirmationService } from 'primeng/api';
 import { Table } from 'primeng/table';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { Product } from 'src/app/interfaces/product.interface';
-import { ProductService } from 'src/app/services/product.service';
+import * as AppActions from 'src/app/pages/dashboard/state/dashboard.actions';
 import {
   getAPIStatus,
   getProducts,
   getStatus,
 } from 'src/app/pages/dashboard/state/dashboard.reducer';
 import { DashboardState } from 'src/app/pages/dashboard/state/dashboard.state';
-import * as AppActions from 'src/app/pages/dashboard/state/dashboard.actions';
 
 @Component({
   selector: 'app-dashboard',
