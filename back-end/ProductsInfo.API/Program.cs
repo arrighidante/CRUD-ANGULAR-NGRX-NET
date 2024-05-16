@@ -11,6 +11,7 @@ using Serilog.Events;
 using System.Reflection;
 using System.Text;
 using Microsoft.Extensions.Options;
+using Products.API.Filters;
 
 
 //Log.Logger = new LoggerConfiguration()
@@ -53,7 +54,7 @@ builder.Services.AddCors(options =>
             builder =>
             {
                 builder.WithOrigins("http://localhost",
-                                    "http://localhost:4200")
+                                    "http://localhost:8100")
                 .AllowAnyMethod()
                 .AllowAnyHeader();
             });
@@ -106,6 +107,11 @@ builder.Services.AddSwaggerGen(setupAction =>
                 }, new List<string>() }
 
     });
+
+    setupAction.SwaggerDoc("v1", new OpenApiInfo { Title = "ProductInfo API", Version = "v1" });
+    
+    // To show enums as strings in Swagger
+    setupAction.SchemaFilter<EnumSchemaFilter>();
 });
 
 builder.Services.AddSingleton<FileExtensionContentTypeProvider>();

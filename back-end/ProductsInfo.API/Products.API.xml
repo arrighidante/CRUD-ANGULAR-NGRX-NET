@@ -4,10 +4,11 @@
         <name>Products.API</name>
     </assembly>
     <members>
-        <member name="M:Products.API.Controllers.ProductsController.GetProducts(System.String,System.String,System.Int32,System.Int32)">
+        <member name="M:Products.API.Controllers.ProductsController.GetProducts(System.Nullable{Products.API.Filters.ProductStatuses},System.String,System.String,System.Int32,System.Int32)">
             <summary>
             Get all products
             </summary>
+            <param name="status">The status of the products to list</param>
             <param name="name">The name of the product to search for</param>
             <param name="searchQuery">The search query to use</param>
             <param name="pageNumber">The page number to retrieve</param>
@@ -50,6 +51,9 @@
             <returns>An IActionResult</returns>
             <response code="204">Product updated successfully</response>
             <response code="404">Product not found</response>
+        </member>
+        <member name="M:Products.API.Filters.EnumSchemaFilter.Apply(Microsoft.OpenApi.Models.OpenApiSchema,Swashbuckle.AspNetCore.SwaggerGen.SchemaFilterContext)">
+            <inheritdoc/>
         </member>
         <member name="T:Products.API.Migrations.InitialMySql">
             <inheritdoc />
