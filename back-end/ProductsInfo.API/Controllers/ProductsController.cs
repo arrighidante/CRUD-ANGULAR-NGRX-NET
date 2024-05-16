@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using Products.API.Entities;
 using Microsoft.AspNetCore.JsonPatch;
+using Products.API.Filters;
 
 namespace Products.API.Controllers
 {
@@ -42,6 +43,7 @@ namespace Products.API.Controllers
         /// <summary>
         /// Get all products
         /// </summary>
+        /// <param name="status">The status of the products to list</param>
         /// <param name="name">The name of the product to search for</param>
         /// <param name="searchQuery">The search query to use</param>
         /// <param name="pageNumber">The page number to retrieve</param>
@@ -50,12 +52,31 @@ namespace Products.API.Controllers
         /// <response code="200">Returns the requested product</response>
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts(
-            [FromQuery] string? name, [FromQuery] string? searchQuery, int pageNumber = 1, int pageSize = 30)
+            [FromQuery] ProductStatuses? status, [FromQuery] string? name, [FromQuery] string? searchQuery, int pageNumber = 1, int pageSize = 30)
         {
             if(pageSize > maxProductsPageSize)
             {
                 pageSize = maxProductsPageSize;
             }
+
+            
+                switch (status)
+                {
+                    case ProductStatuses.Active:
+                        _logger.LogInformation("Getting all active products");
+                        break;
+                    case ProductStatuses.Inactive:
+                        _logger.LogInformation("Getting all inactive products");
+                        break;
+                    case ProductStatuses.LowStock:
+                        _logger.LogInformation("Getting all products with low stock");
+                        break;
+                    default:
+                        _logger.LogInformation("Getting all products");
+                        break;
+                }
+             
+            
 
             var (productEntities, paginationMetadata) = await _productInfoRepository
                 .GetProductsAsync(name, searchQuery, pageNumber, pageSize);

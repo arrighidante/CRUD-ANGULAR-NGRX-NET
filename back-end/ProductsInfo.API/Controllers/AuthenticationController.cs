@@ -61,31 +61,33 @@ namespace Products.API.Controllers
             var claimsForToken = new List<Claim>();
             claimsForToken.Add(new Claim("sub", user.UserId.ToString()));
             claimsForToken.Add(new Claim("given_name", user.FirstName.ToString()));
-            claimsForToken.Add(new Claim("family_name", user.LastName.ToString())); 
+            claimsForToken.Add(new Claim("family_name", user.LastName.ToString()));
             claimsForToken.Add(new Claim("city", user.City.ToString()));
-
+           
             var jwtSecurityToken = new JwtSecurityToken(
                 _configuration["Authentication:Issuer"],
                 _configuration["Authentication:Audience"],
                 claimsForToken,
                 DateTime.UtcNow,
                 DateTime.UtcNow.AddHours(1),
-                signingCredentials);
+                signingCredentials
+                );
             
             var tokenToReturn = new JwtSecurityTokenHandler()
                 .WriteToken(jwtSecurityToken);
 
             return Ok(tokenToReturn);
-
         }
 
         private ProductInfoUser ValidateUserCredentials(string? userName, string? password)
         {
             // If credentials are valid, get user from db
-            return new ProductInfoUser(1, userName ?? "",
+            return new ProductInfoUser(
+                1, userName ?? "",
                 "Dante",
                 "Arrighi",
-                "Rosario");
+                "Rosario"
+                );
         }
 
     }
